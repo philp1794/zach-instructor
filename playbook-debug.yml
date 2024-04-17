@@ -1,0 +1,46 @@
+---
+- name: Intro to grabbing data from the net and breaking it down
+  hosts: localhost
+  connection: ansible.builtin.local
+  gather_facts: false   # default is 'true'
+
+  tasks:
+  - name: make an RESTful HTTP call
+    ansible.builtin.uri:
+      method: GET
+      url: http://api.open-notify.org/astros.json
+    register: results #anything produced by ansible-playbook playbook.yml -v is saved
+
+  - name: what was pulled back
+    ansible.builtin.debug:
+      #msg: "Thats all folks!"
+      #msg: "Thats all folks! {{ with_a_variable }}"
+      var: results   # when you debug a "var" you don't use {{ }} or quotes
+      verbosity: 1
+
+  - name: create a file
+    ansible.builtin.copy:
+      content: "{{ results.json.people }}"
+      dest: output.json
+
+  - name: create file to write names into
+    ansible.builtin.file:
+      state: touch
+      dest: namesonly.txt 
+
+  - name: create a file with just names
+    ansible.builtin.lineinfile:
+      line: "{{ item.name }}"
+      path: namesonly.txt
+    loop: "{{ results.json.people }}"
+
+  - name: create file to write FIRST names ONLY into
+    ansible.builtin.file:
+      state: touch
+      dest: FIRSTnamesonly.txt
+
+  - name: create a file with just names
+    ansible.builtin.lineinfile:
+      line: "{{ item.name.split(' ')[0] }}"
+      path: FIRSTnamesonly.txt
+    loop: "{{ results.json.people }}" 

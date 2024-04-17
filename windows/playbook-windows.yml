@@ -1,0 +1,14 @@
+- name: windows playbook 01
+  hosts: windows_west
+  gather_facts: true  # can we gather_facts of a windows host?
+  connection: winrm
+
+  tasks:
+    - name: display all collected gather_facts
+      ansible.builtin.debug:
+        var: ansible_facts  # this contains all of the gather_fact results
+
+    - name: Download earthrise.jpg to specified path
+      ansible.windows.win_get_url:
+        url: https://apod.nasa.gov/apod/image/2404/EclipseComets_Zixuan_6105.jpg
+        dest: C:\Users\student\Desktop\EclipseComets_Zixuan_6105.jpg
