@@ -1,0 +1,11 @@
+---
+- name: Network Playbook to gather facts
+  hosts: all
+  gather_facts: yes  # default is yes
+  connection: network_cli
+  become: yes
+
+  tasks:
+  - name: Show registered facts
+    debug:
+      var: ansible_facts

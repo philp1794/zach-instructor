@@ -1,0 +1,9 @@
+[switches]
+sw-1
+sw-2
+
+[switches:vars]
+ansible_network_os=eos
+ansible_become_method=enable
+ansible_user=admin
+ansible_ssh_pass=alta3
